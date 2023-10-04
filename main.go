@@ -44,7 +44,7 @@ func main(){
 	v1Router := chi.NewRouter()
 	// v1Router.HandleFunc("/healthz",handlerReadiness) // Handles all HTTP verbs
 	v1Router.Get("/healthz",handlerReadiness) // Only HTTP GET verb
-	v1Router.Get("/err",handleError)``
+	v1Router.Get("/err",handleError)
 
 	// Mount V1 router under sub-path of V1 on main chi-router
 	router.Mount("/v1",v1Router)
