@@ -66,7 +66,14 @@ func main(){
 	// v1Router.HandleFunc("/healthz",handlerReadiness) // Handles all HTTP verbs
 	v1Router.Get("/healthz", handlerReadiness) // Only HTTP GET verb
 	v1Router.Get("/err", handleError)
+	
 	v1Router.Post("/users", apiCfg.handlerCreateUser) // using pointer to gain access to HTTP handler
+	// v1Router.Get("/users", apiCfg.handlerGetUser)
+	v1Router.Get("/users", apiCfg.middlewareAuth(apiCfg.handlerGetUser)) // using middleware for authentication
+	
+	v1Router.Post("/feeds", apiCfg.middlewareAuth(apiCfg.handlerCreateFeed)) // using middleware for authentication
+	v1Router.Get("/feeds", apiCfg.handlerGetFeeds)
+
 
 	// Mount V1 router under sub-path of V1 on main chi-router
 	router.Mount("/v1",v1Router)

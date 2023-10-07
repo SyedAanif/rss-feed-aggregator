@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	// "github.com/SyedAanif/rss-feed-aggregator/internal/auth"
 	"github.com/SyedAanif/rss-feed-aggregator/internal/database"
 	"github.com/google/uuid"
 )
@@ -44,5 +45,32 @@ func (apiCfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 	// NOTE:: Fields with capital starts are exported and can be marshaled to JSON, 
 	// exactly as capital letters of functions
 	// so we can build custom DTO converter
+	respondWithJSON(w, 201, databaseUserToUser(user))
+}
+
+/*
+	HTTP Handler to deal with operations related to DB in GO
+	// NOTE:: function signature can't change, so to get apiConfig here, we pass a pointer
+	// NOTE:: we can pass in an authenticated user and then convert it to standard HTTP handler
+*/
+func (apiCfg *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request, user database.User) {
+
+	// NOTE:: This code can be copied for every feeds operation because we need authenticated
+	// users existing in DB to create feeds. So we create a middle ware for abstraction and re-use
+
+	// apiKey, err := auth.GetAPIKey(r.Header)
+	// if err != nil {
+	// 	respondWithError(w, 403, fmt.Sprintf("Authorization Error: %v",err))
+	// 	return
+	// }
+
+	// // Context in GO has track of multiple routines running across. We can track, cancel etc for a context
+	// // using current context
+	// user, err := apiCfg.DB.GetUserByAPIKey(r.Context(), apiKey)
+	// if err != nil{
+	// 	respondWithError(w, 400, fmt.Sprintf("Couldn't get user: %v",err))
+	// 	return
+	// }
+	
 	respondWithJSON(w, 200, databaseUserToUser(user))
 }
