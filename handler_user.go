@@ -74,3 +74,22 @@ func (apiCfg *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request, 
 	
 	respondWithJSON(w, 200, databaseUserToUser(user))
 }
+
+/*
+	HTTP Handler to deal with operations related to DB in GO
+	// NOTE:: function signature can't change, so to get apiConfig here, we pass a pointer
+	// NOTE:: we can pass in an authenticated user and then convert it to standard HTTP handler
+*/
+func (apiCfg *apiConfig) handlerGetPostsForUser(w http.ResponseWriter, r *http.Request, user database.User) {
+
+	posts, err := apiCfg.DB.GetPostsForUser(r.Context(), database.GetPostsForUserParams{
+		UserID: user.ID,
+		Limit: 10,
+	})
+
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Couldn't retrieve posts: %v", err))
+		return
+	}
+	respondWithJSON(w, 200, databasePostsToPosts(posts))
+}
