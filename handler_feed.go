@@ -67,5 +67,5 @@ func (apiCfg *apiConfig) handlerGetFeeds(w http.ResponseWriter, r *http.Request)
 	// NOTE:: Fields with capital starts are exported and can be marshaled to JSON, 
 	// exactly as capital letters of functions
 	// so we can build custom DTO converter
-	respondWithJSON(w, 201, databaseFeedsToFeeds(feeds))
+	respondWithJSON(w, 200, databaseFeedsToFeeds(feeds))
 }

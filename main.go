@@ -15,7 +15,7 @@ import (
 )
 
 func main(){
-	fmt.Println("*** Welcome to RSS(Rich Site Survey) Feed Aggregator! ***")
+	fmt.Println("*** Welcome to RSS(RDF Site Summary or Really Simple Syndication) Feed Aggregator! ***")
 	
 	// go get github.com/joho/godotenv --> get env variables
 	// go mod vendor --> local copy
@@ -74,6 +74,9 @@ func main(){
 	v1Router.Post("/feeds", apiCfg.middlewareAuth(apiCfg.handlerCreateFeed)) // using middleware for authentication
 	v1Router.Get("/feeds", apiCfg.handlerGetFeeds)
 
+	v1Router.Post("/feed_follows", apiCfg.middlewareAuth(apiCfg.handlerCreateFeedFollow)) // authenticated user can create feed follow
+	v1Router.Get("/feed_follows", apiCfg.middlewareAuth(apiCfg.handlerGetFeedFollows))
+	v1Router.Delete("/feed_follows/{feedFollowID}",apiCfg.middlewareAuth(apiCfg.handlerDeleteFeedFollow))
 
 	// Mount V1 router under sub-path of V1 on main chi-router
 	router.Mount("/v1",v1Router)
