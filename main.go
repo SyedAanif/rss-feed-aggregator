@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/SyedAanif/rss-feed-aggregator/internal/database"
 	"github.com/go-chi/chi"
@@ -16,6 +17,13 @@ import (
 
 func main(){
 	fmt.Println("*** Welcome to RSS(RDF Site Summary or Really Simple Syndication) Feed Aggregator! ***")
+	
+	// Sanity test
+	// feed, er := urlToFeed("rss-feed-url")
+	// if er != nil {
+	// 	log.Fatal(er)
+	// }
+	// fmt.Println(feed)
 	
 	// go get github.com/joho/godotenv --> get env variables
 	// go mod vendor --> local copy
@@ -43,10 +51,19 @@ func main(){
 		log.Fatal("Could not connect to DB:",e)
 	}
 
+
 	// Generate access to DB
+	db := database.New(conn)
 	apiCfg := apiConfig{
-		DB: database.New(conn), // Convert sql_DB queries to DB_queries
+		DB: db, // Convert sql_DB queries to DB_queries
 	}
+
+	// start scrapping in background on separate go routine
+	go startScrapping(
+		db,
+		10,
+		time.Minute,
+	)
 
 	// CHI router is light-weight standard GO router/web-server
 	router := chi.NewRouter()
